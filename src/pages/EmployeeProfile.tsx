@@ -1,10 +1,12 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { getEmployeeById, EmployeeType } from '../data/employees';
-import { Mail, Phone, MapPin, User, Briefcase, Award, Heart, Code, Users, ChevronRight } from 'lucide-react';
+import { Mail, Phone, MapPin, User, Briefcase, Award, Heart, Code, Users, ChevronRight, Lightbulb, Trophy, MessageCircle, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import EditProfile from '../components/EditProfile';
 
 const EmployeeProfile = () => {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +76,7 @@ const EmployeeProfile = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {employee.bio ? (
+            {employee?.bio ? (
               <p className="text-aramco-darkgray">{employee.bio}</p>
             ) : (
               <p className="text-aramco-darkgray">No biography information available.</p>
@@ -86,7 +88,7 @@ const EmployeeProfile = () => {
                   <Briefcase className="w-5 h-5 mr-2" />
                   Department
                 </h3>
-                <p>{employee.department}</p>
+                <p>{employee?.department}</p>
               </div>
               
               <div className="glass-card p-4 rounded-xl">
@@ -94,9 +96,33 @@ const EmployeeProfile = () => {
                   <MapPin className="w-5 h-5 mr-2" />
                   Location
                 </h3>
-                <p>{employee.location}</p>
+                <p>{employee?.location}</p>
               </div>
             </div>
+
+            {employee?.responsibilities && (
+              <div className="mt-6">
+                <div className="glass-card p-4 rounded-xl">
+                  <h3 className="text-aramco-darkblue font-medium mb-3 flex items-center">
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Current Responsibilities
+                  </h3>
+                  <p className="text-aramco-darkgray">{employee.responsibilities}</p>
+                </div>
+              </div>
+            )}
+            
+            {employee?.manager && (
+              <div className="mt-6">
+                <div className="glass-card p-4 rounded-xl">
+                  <h3 className="text-aramco-darkblue font-medium mb-3 flex items-center">
+                    <Users className="w-5 h-5 mr-2" />
+                    Reports To
+                  </h3>
+                  <p>{employee.manager}</p>
+                </div>
+              </div>
+            )}
           </motion.div>
         );
       
@@ -107,7 +133,7 @@ const EmployeeProfile = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {employee.skills && employee.skills.length > 0 ? (
+            {employee?.skills && employee.skills.length > 0 ? (
               <div className="space-y-6">
                 <div className="flex flex-wrap gap-2">
                   {employee.skills.map((skill, i) => (
@@ -153,7 +179,7 @@ const EmployeeProfile = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {employee.interests && employee.interests.length > 0 ? (
+            {employee?.interests && employee.interests.length > 0 ? (
               <div className="space-y-6">
                 <div className="flex flex-wrap gap-2">
                   {employee.interests.map((interest, i) => (
@@ -191,7 +217,7 @@ const EmployeeProfile = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {employee.projects && employee.projects.length > 0 ? (
+            {employee?.projects && employee.projects.length > 0 ? (
               <div className="space-y-4">
                 {employee.projects.map((project, index) => (
                   <div key={index} className="glass-card p-5 rounded-xl">
@@ -213,6 +239,127 @@ const EmployeeProfile = () => {
           </motion.div>
         );
       
+      case 'achievements':
+        return (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {employee?.achievements && employee.achievements.length > 0 ? (
+              <div className="space-y-4">
+                {employee.achievements.map((achievement, index) => (
+                  <div key={index} className="glass-card p-5 rounded-xl">
+                    <h3 className="text-aramco-darkblue font-medium mb-1">
+                      {achievement.title}
+                    </h3>
+                    <p className="text-sm text-aramco-darkgray mb-3">
+                      {achievement.date}
+                    </p>
+                    <p className="text-aramco-darkgray">
+                      {achievement.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-aramco-darkgray">No achievement information available.</p>
+            )}
+          </motion.div>
+        );
+      
+      case 'awards':
+        return (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {employee?.awards && employee.awards.length > 0 ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {employee.awards.map((award, index) => (
+                    <div key={index} className="glass-card p-5 rounded-xl">
+                      <div className="flex items-start mb-3">
+                        <div className="p-2 rounded-full bg-aramco-blue bg-opacity-10 mr-3">
+                          <Trophy className="w-5 h-5 text-aramco-blue" />
+                        </div>
+                        <div>
+                          <h3 className="text-aramco-darkblue font-medium">{award.title}</h3>
+                          <p className="text-sm text-aramco-darkgray">{award.year} • {award.issuer}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-aramco-darkgray">No awards information available.</p>
+            )}
+          </motion.div>
+        );
+      
+      case 'mentoring':
+        return (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {employee?.mentoring ? (
+              <div className="space-y-6">
+                <div className="glass-card p-5 rounded-xl">
+                  <div className="flex items-start mb-4">
+                    <div className={`p-2 rounded-full mr-3 ${employee.mentoring.available ? 'bg-green-100' : 'bg-amber-100'}`}>
+                      <Lightbulb className={`w-5 h-5 ${employee.mentoring.available ? 'text-green-600' : 'text-amber-600'}`} />
+                    </div>
+                    <div>
+                      <h3 className="text-aramco-darkblue font-medium">
+                        {employee.mentoring.available 
+                          ? 'Available for Mentoring' 
+                          : 'Not Currently Available for Mentoring'}
+                      </h3>
+                    </div>
+                  </div>
+                  
+                  {employee.mentoring.available && (
+                    <>
+                      {employee.mentoring.topics && (
+                        <div className="mb-4">
+                          <h4 className="text-aramco-darkblue font-medium mb-2">Mentoring Topics</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {employee.mentoring.topics.map((topic, i) => (
+                              <span 
+                                key={i}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-aramco-blue bg-opacity-10 text-aramco-darkblue"
+                              >
+                                {topic}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {employee.mentoring.experience && (
+                        <div>
+                          <h4 className="text-aramco-darkblue font-medium mb-2">Mentoring Experience</h4>
+                          <p className="text-aramco-darkgray">{employee.mentoring.experience}</p>
+                        </div>
+                      )}
+                      
+                      <div className="mt-4 pt-4 border-t border-aramco-gray">
+                        <Button>Request Mentoring</Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <p className="text-aramco-darkgray">No mentoring information available.</p>
+            )}
+          </motion.div>
+        );
+      
       default:
         return null;
     }
@@ -230,7 +377,7 @@ const EmployeeProfile = () => {
                 Search Results
               </Link>
               <ChevronRight className="w-4 h-4 text-white/60" />
-              <span className="ml-2 text-sm text-white/80">{employee.name}</span>
+              <span className="ml-2 text-sm text-white/80">{employee?.name}</span>
             </div>
           </div>
         </div>
@@ -246,7 +393,7 @@ const EmployeeProfile = () => {
             >
               <div className="flex flex-col items-center text-center mb-6">
                 <div className="w-24 h-24 rounded-full overflow-hidden mb-4 bg-aramco-blue bg-opacity-10">
-                  {employee.photoUrl ? (
+                  {employee?.photoUrl ? (
                     <img 
                       src={employee.photoUrl} 
                       alt={employee.name} 
@@ -254,14 +401,14 @@ const EmployeeProfile = () => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-aramco-blue text-3xl font-semibold">
-                      {employee.name.charAt(0)}
+                      {employee?.name.charAt(0)}
                     </div>
                   )}
                 </div>
                 <h2 className="text-2xl font-display font-medium text-aramco-darkblue">
-                  {employee.name}
+                  {employee?.name}
                 </h2>
-                <p className="text-aramco-darkgray mt-1">{employee.title}</p>
+                <p className="text-aramco-darkgray mt-1">{employee?.title}</p>
               </div>
               
               <div className="space-y-4">
@@ -269,8 +416,8 @@ const EmployeeProfile = () => {
                   <Mail className="w-5 h-5 text-aramco-blue mr-3" />
                   <div>
                     <p className="text-sm text-aramco-darkgray">Email</p>
-                    <a href={`mailto:${employee.email}`} className="text-aramco-darkblue hover:text-aramco-blue">
-                      {employee.email}
+                    <a href={`mailto:${employee?.email}`} className="text-aramco-darkblue hover:text-aramco-blue">
+                      {employee?.email}
                     </a>
                   </div>
                 </div>
@@ -279,8 +426,8 @@ const EmployeeProfile = () => {
                   <Phone className="w-5 h-5 text-aramco-blue mr-3" />
                   <div>
                     <p className="text-sm text-aramco-darkgray">Phone</p>
-                    <a href={`tel:${employee.phone}`} className="text-aramco-darkblue hover:text-aramco-blue">
-                      {employee.phone}
+                    <a href={`tel:${employee?.phone}`} className="text-aramco-darkblue hover:text-aramco-blue">
+                      {employee?.phone}
                     </a>
                   </div>
                 </div>
@@ -289,12 +436,12 @@ const EmployeeProfile = () => {
                   <MapPin className="w-5 h-5 text-aramco-blue mr-3" />
                   <div>
                     <p className="text-sm text-aramco-darkgray">Location</p>
-                    <p>{employee.location}</p>
+                    <p>{employee?.location}</p>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-6 pt-4 border-t border-aramco-gray">
+              <div className="mt-6 pt-4 border-t border-aramco-gray space-y-3">
                 <Link 
                   to="/org-chart" 
                   className="flex items-center justify-center text-aramco-blue hover:text-aramco-darkblue transition-colors"
@@ -302,6 +449,18 @@ const EmployeeProfile = () => {
                   <Users className="w-5 h-5 mr-2" />
                   <span>View in Organization Chart</span>
                 </Link>
+
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="w-full">
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="overflow-y-auto" side="right">
+                    {employee && <EditProfile employee={employee} onSave={(updatedEmployee) => setEmployee(updatedEmployee)} />}
+                  </SheetContent>
+                </Sheet>
               </div>
             </motion.div>
           </div>
@@ -315,17 +474,20 @@ const EmployeeProfile = () => {
               className="glass-card rounded-2xl overflow-hidden"
             >
               {/* Tab navigation */}
-              <div className="flex border-b border-aramco-gray">
+              <div className="flex flex-wrap border-b border-aramco-gray">
                 {[
                   { id: 'about', label: 'About', icon: User },
                   { id: 'skills', label: 'Skills', icon: Award },
                   { id: 'interests', label: 'Interests', icon: Heart },
-                  { id: 'projects', label: 'Projects', icon: Code }
+                  { id: 'projects', label: 'Projects', icon: Code },
+                  { id: 'achievements', label: 'Achievements', icon: Lightbulb },
+                  { id: 'awards', label: 'Awards', icon: Trophy },
+                  { id: 'mentoring', label: 'Mentoring', icon: Users }
                 ].map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center px-4 py-3 text-sm font-medium flex-1 md:flex-none md:px-6 transition-all ${
+                    className={`flex items-center px-4 py-3 text-sm font-medium transition-all ${
                       activeTab === tab.id
                         ? 'text-aramco-blue border-b-2 border-aramco-blue'
                         : 'text-aramco-darkgray hover:text-aramco-darkblue hover:bg-aramco-gray hover:bg-opacity-10'

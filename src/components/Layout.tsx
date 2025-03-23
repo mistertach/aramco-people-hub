@@ -1,7 +1,7 @@
 
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Users, Network, Home } from 'lucide-react';
+import { Search, Users, Network, Lightbulb } from 'lucide-react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/', label: 'Search', icon: Search },
     { path: '/results', label: 'Results', icon: Users },
     { path: '/org-chart', label: 'Org Chart', icon: Network },
+    { path: '/mentoring', label: 'Mentoring', icon: Lightbulb },
   ];
 
   return (

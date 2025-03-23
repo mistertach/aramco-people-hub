@@ -1,4 +1,3 @@
-
 export interface EmployeeType {
   id: string;
   name: string;
@@ -19,6 +18,22 @@ export interface EmployeeType {
   }[];
   manager?: string;
   directReports?: EmployeeType[];
+  responsibilities?: string;
+  achievements?: {
+    title: string;
+    date: string;
+    description: string;
+  }[];
+  awards?: {
+    title: string;
+    year: string;
+    issuer: string;
+  }[];
+  mentoring?: {
+    available: boolean;
+    topics?: string[];
+    experience?: string;
+  };
 }
 
 // Base employee list without hierarchy relationships
@@ -48,7 +63,37 @@ const employeesList: EmployeeType[] = [
         role: "Executive Sponsor",
         period: "2018 - Present"
       }
-    ]
+    ],
+    responsibilities: "Leading overall company strategy and operations, focusing on digital transformation initiatives and sustainable energy development.",
+    achievements: [
+      {
+        title: "IPO Leadership",
+        date: "December 2019",
+        description: "Successfully led Saudi Aramco's record-breaking initial public offering."
+      },
+      {
+        title: "Digital Transformation",
+        date: "2020-Present",
+        description: "Spearheaded the company-wide digital transformation program."
+      }
+    ],
+    awards: [
+      {
+        title: "Global Energy Leader of the Year",
+        year: "2020",
+        issuer: "Energy Intelligence"
+      },
+      {
+        title: "Distinguished Executive Award",
+        year: "2018",
+        issuer: "World Petroleum Council"
+      }
+    ],
+    mentoring: {
+      available: true,
+      topics: ["Leadership", "Corporate Strategy", "Energy Transition"],
+      experience: "Over 30 years in the energy industry with expertise in navigating complex global markets and strategic leadership."
+    }
   },
   {
     id: "e002",
@@ -90,7 +135,32 @@ const employeesList: EmployeeType[] = [
         role: "Executive Lead",
         period: "2019 - Present"
       }
-    ]
+    ],
+    responsibilities: "Overseeing human resources strategy, talent acquisition, employee experience, and corporate services operations.",
+    achievements: [
+      {
+        title: "Talent Excellence Program Launch",
+        date: "January 2021",
+        description: "Successfully launched the Talent Excellence Program across all departments."
+      },
+      {
+        title: "HR Digitalization",
+        date: "2020-2022",
+        description: "Led the digitalization of key HR processes, improving efficiency by 35%."
+      }
+    ],
+    awards: [
+      {
+        title: "HR Leader of the Year",
+        year: "2022",
+        issuer: "Middle East HR Excellence Awards"
+      }
+    ],
+    mentoring: {
+      available: true,
+      topics: ["HR Strategy", "Professional Development", "Change Management"],
+      experience: "15+ years helping professionals develop their careers in the energy sector with a focus on leadership development."
+    }
   },
   {
     id: "e004",

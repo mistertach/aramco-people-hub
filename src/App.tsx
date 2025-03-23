@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import SearchResults from "./pages/SearchResults";
 import EmployeeProfile from "./pages/EmployeeProfile";
 import OrgChartPage from "./pages/OrgChart";
+import Mentoring from "./pages/Mentoring";
 import NotFound from "./pages/NotFound";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/results" element={<SearchResults />} />
             <Route path="/employee/:id" element={<EmployeeProfile />} />
             <Route path="/org-chart" element={<OrgChartPage />} />
+            <Route path="/mentoring" element={<Mentoring />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AnimatePresence>
