@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
+import SmartProfileSummary from '../components/SmartProfileSummary';
 import { getEmployeeById, EmployeeType } from '../data/employees';
 import { Mail, Phone, MapPin, User, Briefcase, Award, Heart, Code, Users, ChevronRight, Lightbulb, Trophy, MessageCircle, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -76,11 +78,15 @@ const EmployeeProfile = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {employee?.bio ? (
-              <p className="text-aramco-darkgray">{employee.bio}</p>
-            ) : (
-              <p className="text-aramco-darkgray">No biography information available.</p>
-            )}
+            <SmartProfileSummary employee={employee} />
+            
+            <div className="mt-6">
+              {employee?.bio ? (
+                <p className="text-aramco-darkgray">{employee.bio}</p>
+              ) : (
+                <p className="text-aramco-darkgray">No biography information available.</p>
+              )}
+            </div>
             
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="glass-card p-4 rounded-xl">
