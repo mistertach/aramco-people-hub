@@ -1,3 +1,15 @@
+export interface TeamType {
+  id: string;
+  name: string;
+  description: string;
+  members: string[]; // employee IDs
+  projects?: {
+    name: string;
+    description: string;
+    status: 'active' | 'completed' | 'planned';
+  }[];
+}
+
 export interface EmployeeType {
   id: string;
   name: string;
@@ -34,6 +46,7 @@ export interface EmployeeType {
     topics?: string[];
     experience?: string;
   };
+  teamId?: string; // Reference to which team they belong to
 }
 
 // Base employee list without hierarchy relationships
@@ -320,10 +333,100 @@ const employeesList: EmployeeType[] = [
   }
 ];
 
-// Build organization structure
+// Team data
+export const teamsData: TeamType[] = [
+  {
+    id: "team001",
+    name: "Digital Transformation",
+    description: "Cross-functional team focused on digital initiatives across the company",
+    members: ["e001", "e008", "e011", "e015"],
+    projects: [
+      {
+        name: "AI-Driven Operations",
+        description: "Implementing AI solutions to optimize operational efficiency",
+        status: "active"
+      },
+      {
+        name: "Cloud Migration",
+        description: "Transferring legacy systems to cloud infrastructure",
+        status: "active"
+      }
+    ]
+  },
+  {
+    id: "team002",
+    name: "Sustainability Task Force",
+    description: "Team focused on environmental initiatives and sustainable practices",
+    members: ["e001", "e003", "e013"],
+    projects: [
+      {
+        name: "Carbon Footprint Reduction",
+        description: "Initiatives to minimize company-wide carbon emissions",
+        status: "active"
+      },
+      {
+        name: "Renewable Energy Integration",
+        description: "Exploring renewable energy sources for facilities",
+        status: "planned"
+      }
+    ]
+  },
+  {
+    id: "team003",
+    name: "Finance Excellence",
+    description: "Team focused on financial optimization and reporting improvements",
+    members: ["e005", "e012"],
+    projects: [
+      {
+        name: "Financial Systems Upgrade",
+        description: "Modernizing financial tracking and reporting systems",
+        status: "active"
+      }
+    ]
+  },
+  {
+    id: "team004",
+    name: "Upstream Technology",
+    description: "Team focused on technological advancements in upstream operations",
+    members: ["e002", "e006", "e007", "e014"],
+    projects: [
+      {
+        name: "Advanced Drilling Techniques",
+        description: "Research and implementation of next-gen drilling technologies",
+        status: "active"
+      },
+      {
+        name: "Reservoir Optimization",
+        description: "Using data analytics to improve reservoir management",
+        status: "active"
+      }
+    ]
+  },
+  {
+    id: "team005",
+    name: "HR Innovation",
+    description: "Team focused on improving employee experience and HR processes",
+    members: ["e004", "e010"],
+    projects: [
+      {
+        name: "Talent Development Program",
+        description: "Comprehensive program for nurturing internal talent",
+        status: "active"
+      }
+    ]
+  }
+];
+
+// Update employee records with team associations
 export const employeesData = employeesList.map(employee => {
+  // Find which team(s) this employee belongs to
+  const employeeTeamId = teamsData.find(team => 
+    team.members.includes(employee.id)
+  )?.id;
+  
   return {
     ...employee,
+    teamId: employeeTeamId,
     // For simplicity, we're just adding a couple of direct reports based on department
     directReports: employeesList.filter(report => 
       report.department === employee.department && 
@@ -333,7 +436,7 @@ export const employeesData = employeesList.map(employee => {
   };
 });
 
-// Create proper org chart structure with CEO at top
+// Build organization structure
 export const orgChartData: EmployeeType = {
   ...employeesList.find(e => e.id === "e001")!, // CEO
   directReports: [
@@ -371,6 +474,26 @@ export const orgChartData: EmployeeType = {
       ]
     }
   ]
+};
+
+// Helper function to get team by ID
+export const getTeamById = (id: string): TeamType | undefined => {
+  return teamsData.find(team => team.id === id);
+};
+
+// Helper function to get all teams
+export const getAllTeams = (): TeamType[] => {
+  return teamsData;
+};
+
+// Helper function to get team members
+export const getTeamMembers = (teamId: string): EmployeeType[] => {
+  const team = getTeamById(teamId);
+  if (!team) return [];
+  
+  return team.members
+    .map(memberId => employeesList.find(emp => emp.id === memberId))
+    .filter(member => member !== undefined) as EmployeeType[];
 };
 
 // Helper function to get an employee by ID

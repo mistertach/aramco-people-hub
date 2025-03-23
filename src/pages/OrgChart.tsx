@@ -1,14 +1,18 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import OrgChart from '../components/OrgChart';
-import { orgChartData } from '../data/employees';
+import { orgChartData, getAllTeams } from '../data/employees';
 import { motion } from 'framer-motion';
-import { Search, ZoomIn, ZoomOut, Network } from 'lucide-react';
+import { Search, ZoomIn, ZoomOut, Network, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const OrgChartPage = () => {
   const [zoomLevel, setZoomLevel] = useState(100);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+  const teams = getAllTeams();
 
   const handleZoomIn = () => {
     if (zoomLevel < 150) {
@@ -20,6 +24,10 @@ const OrgChartPage = () => {
     if (zoomLevel > 70) {
       setZoomLevel(zoomLevel - 10);
     }
+  };
+
+  const handleTeamClick = (teamId: string) => {
+    navigate(`/team/${teamId}`);
   };
 
   return (
@@ -80,6 +88,32 @@ const OrgChartPage = () => {
         </div>
         
         <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-6"
+        >
+          <h2 className="text-xl font-display font-medium text-aramco-darkblue mb-3 flex items-center">
+            <Users className="w-5 h-5 mr-2 text-aramco-blue" />
+            Cross-Functional Teams
+          </h2>
+          
+          <div className="flex flex-wrap gap-2">
+            {teams.map(team => (
+              <Button
+                key={team.id}
+                variant="outline"
+                size="sm"
+                className="bg-white"
+                onClick={() => handleTeamClick(team.id)}
+              >
+                {team.name}
+              </Button>
+            ))}
+          </div>
+        </motion.div>
+        
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -96,7 +130,7 @@ const OrgChartPage = () => {
         <div className="mt-8 text-center text-aramco-darkgray text-sm">
           <p>
             This organization chart shows the leadership structure at Aramco.
-            Click on any employee to view their detailed profile.
+            Click on any employee to view their detailed profile or team badges to view team details.
           </p>
         </div>
       </div>

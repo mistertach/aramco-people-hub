@@ -1,38 +1,30 @@
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Index from './pages/Index';
+import EmployeeProfile from './pages/EmployeeProfile';
+import SearchResults from './pages/SearchResults';
+import OrgChart from './pages/OrgChart';
+import Mentoring from './pages/Mentoring';
+import Team from './pages/Team';
+import NotFound from './pages/NotFound';
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import SearchResults from "./pages/SearchResults";
-import EmployeeProfile from "./pages/EmployeeProfile";
-import OrgChartPage from "./pages/OrgChart";
-import Mentoring from "./pages/Mentoring";
-import NotFound from "./pages/NotFound";
-import { motion, AnimatePresence } from "framer-motion";
+import './App.css';
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/employee/:id" element={<EmployeeProfile />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/org-chart" element={<OrgChart />} />
+        <Route path="/mentoring" element={<Mentoring />} />
+        <Route path="/team/:id" element={<Team />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/results" element={<SearchResults />} />
-            <Route path="/employee/:id" element={<EmployeeProfile />} />
-            <Route path="/org-chart" element={<OrgChartPage />} />
-            <Route path="/mentoring" element={<Mentoring />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AnimatePresence>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </Router>
+  );
+}
 
 export default App;

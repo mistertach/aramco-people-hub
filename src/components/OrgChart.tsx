@@ -1,8 +1,10 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, ChevronRight, User } from 'lucide-react';
-import { EmployeeType } from '../data/employees';
+import { ChevronDown, ChevronUp, User, Users } from 'lucide-react';
+import { EmployeeType, getTeamById } from '../data/employees';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface OrgChartProps {
   data: EmployeeType;
@@ -13,6 +15,8 @@ const OrgChart = ({ data, level = 0 }: OrgChartProps) => {
   const [isExpanded, setIsExpanded] = useState(level < 2);
   const navigate = useNavigate();
   const hasChildren = data.directReports && data.directReports.length > 0;
+  
+  const team = data.teamId ? getTeamById(data.teamId) : undefined;
 
   const handleNodeClick = (e: React.MouseEvent, employeeId: string) => {
     e.stopPropagation();
@@ -22,6 +26,12 @@ const OrgChart = ({ data, level = 0 }: OrgChartProps) => {
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsExpanded(!isExpanded);
+  };
+
+  const handleTeamClick = (e: React.MouseEvent, teamId: string) => {
+    e.stopPropagation();
+    // Navigate to team page with team ID
+    navigate(`/team/${teamId}`);
   };
 
   return (
@@ -57,6 +67,25 @@ const OrgChart = ({ data, level = 0 }: OrgChartProps) => {
             <p className="text-sm text-aramco-darkgray truncate">
               {data.title}
             </p>
+            
+            {team && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge 
+                      className="mt-1 bg-aramco-blue bg-opacity-20 text-aramco-blue hover:bg-aramco-blue hover:text-white cursor-pointer"
+                      onClick={(e) => handleTeamClick(e, team.id)}
+                    >
+                      <Users className="w-3 h-3 mr-1" />
+                      {team.name}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{team.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
           
           {hasChildren && (
