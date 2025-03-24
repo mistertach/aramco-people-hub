@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -9,6 +10,9 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  // If deploying to a subdirectory on your server, uncomment the line below
+  // and replace '/subdirectory/' with your actual subdirectory path
+  // base: '/subdirectory/',
   plugins: [
     react(),
     mode === 'development' &&

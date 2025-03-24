@@ -16,7 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const menuItems = [
     { path: '/', label: 'Search', icon: Search },
-    { path: '/results', label: 'Results', icon: Users },
+    { path: '/search', label: 'Results', icon: Users },
     { path: '/org-chart', label: 'Org Chart', icon: Network },
     { path: '/mentoring', label: 'Mentoring', icon: Lightbulb },
   ];
