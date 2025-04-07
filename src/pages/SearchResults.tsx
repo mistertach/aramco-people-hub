@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
+import AISearchAssistant from '../components/AISearchAssistant';
 import EmployeeCard from '../components/EmployeeCard';
 import { searchEmployees, EmployeeType } from '../data/employees';
 import { motion } from 'framer-motion';
@@ -13,6 +14,7 @@ const SearchResults = () => {
   const query = new URLSearchParams(location.search).get('q') || '';
   const [results, setResults] = useState<EmployeeType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAISearch, setShowAISearch] = useState(true); // Show AI search component by default
 
   useEffect(() => {
     // Simulate API call with a slight delay
@@ -44,6 +46,12 @@ const SearchResults = () => {
             )}
           </div>
         </div>
+
+        {showAISearch && (
+          <div className="mb-8">
+            <AISearchAssistant />
+          </div>
+        )}
         
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

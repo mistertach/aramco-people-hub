@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchEmployees, EmployeeType } from '../data/employees';
-import { Sparkles, Search } from 'lucide-react';
+import { Sparkles, Search, Rocket, Users, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
@@ -14,6 +14,24 @@ const AISearchAssistant = () => {
   const [results, setResults] = useState<EmployeeType[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const suggestedQuestions = [
+    {
+      icon: <Rocket className="w-4 h-4" />,
+      text: "Who can I talk to about quantum computing?",
+      keywords: "technology quantum computing expert"
+    },
+    {
+      icon: <Users className="w-4 h-4" />,
+      text: "Which teams are working on cybersecurity?",
+      keywords: "cybersecurity IT security"
+    },
+    {
+      icon: <Leaf className="w-4 h-4" />,
+      text: "Find experts in sustainability initiatives",
+      keywords: "sustainability environment green"
+    }
+  ];
 
   const processNaturalLanguageQuery = (query: string) => {
     // This is a simplified implementation of NLP search
@@ -86,6 +104,37 @@ const AISearchAssistant = () => {
     }, 1000);
   };
 
+  const handleSuggestedQuestion = (questionData: typeof suggestedQuestions[0]) => {
+    setQuery(questionData.text);
+    
+    // Use the keywords directly for search to ensure relevant results
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      try {
+        const searchResults = searchEmployees(questionData.keywords);
+        setResults(searchResults);
+        setShowResults(true);
+        
+        toast({
+          title: "AI Search Results",
+          description: `I found ${searchResults.length} people related to this topic`,
+          duration: 3000,
+        });
+      } catch (error) {
+        console.error('Error processing search query:', error);
+        toast({
+          title: "Search Error",
+          description: "Sorry, I couldn't process that query. Please try again.",
+          variant: "destructive",
+          duration: 3000,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }, 800);
+  };
+
   const handleEmployeeClick = (id: string) => {
     navigate(`/employee/${id}`);
   };
@@ -104,6 +153,19 @@ const AISearchAssistant = () => {
           placeholder="Ask a natural language question like 'Who's the expert on cybersecurity in Dhahran?' or 'Find me IT managers'..."
           className="min-h-20"
         />
+      </div>
+      
+      <div className="flex flex-wrap gap-2 mb-4">
+        {suggestedQuestions.map((question, index) => (
+          <button
+            key={index}
+            onClick={() => handleSuggestedQuestion(question)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-aramco-blue bg-opacity-10 hover:bg-opacity-20 text-aramco-darkblue rounded-full transition-colors duration-200"
+          >
+            {question.icon}
+            {question.text}
+          </button>
+        ))}
       </div>
       
       <Button 
