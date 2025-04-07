@@ -1,12 +1,13 @@
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import OrgChart from '../components/OrgChart';
-import { orgChartData, getAllTeams } from '../data/employees';
+import { orgChartData, getAllTeams, getEmployeeById, EmployeeType } from '../data/employees';
 import { motion } from 'framer-motion';
-import { Search, ZoomIn, ZoomOut, Network, Users } from 'lucide-react';
+import { Search, ZoomIn, ZoomOut, Network, Users, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { 
   ResizablePanelGroup,
   ResizablePanel,
@@ -14,10 +15,22 @@ import {
 } from "@/components/ui/resizable";
 
 const OrgChartPage = () => {
+  const [searchParams] = useSearchParams();
+  const focusedEmployeeId = searchParams.get('focus') || undefined;
   const [zoomLevel, setZoomLevel] = useState(100);
   const [searchTerm, setSearchTerm] = useState('');
+  const [focusedEmployee, setFocusedEmployee] = useState<EmployeeType | undefined>(undefined);
   const navigate = useNavigate();
   const teams = getAllTeams();
+
+  useEffect(() => {
+    if (focusedEmployeeId) {
+      const employee = getEmployeeById(focusedEmployeeId);
+      setFocusedEmployee(employee);
+    } else {
+      setFocusedEmployee(undefined);
+    }
+  }, [focusedEmployeeId]);
 
   const handleZoomIn = () => {
     if (zoomLevel < 150) {
@@ -35,6 +48,19 @@ const OrgChartPage = () => {
     navigate(`/team/${teamId}`);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
+  const resetFocus = () => {
+    navigate('/org-chart');
+  };
+
+  const displayEmployee = focusedEmployee || orgChartData;
+
   return (
     <Layout>
       <div className="max-w-full mx-auto">
@@ -49,7 +75,9 @@ const OrgChartPage = () => {
               Organization Chart
             </h1>
             <p className="text-aramco-darkgray mt-1">
-              Explore the hierarchical structure of Aramco from CEO to Groups
+              {focusedEmployee ? 
+                `Viewing ${focusedEmployee.name}'s organization structure` : 
+                "Explore the organizational structure of Aramco"}
             </p>
           </motion.div>
           
@@ -59,7 +87,7 @@ const OrgChartPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center mt-4 md:mt-0"
           >
-            <div className="relative mr-4">
+            <form onSubmit={handleSearch} className="relative mr-4">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Search className="w-4 h-4 text-aramco-darkgray" />
               </div>
@@ -70,7 +98,7 @@ const OrgChartPage = () => {
                 placeholder="Find in org chart..."
                 className="aramco-input pl-10 py-1.5 text-sm w-44 md:w-56"
               />
-            </div>
+            </form>
             
             <div className="flex items-center bg-white rounded-lg border border-aramco-gray">
               <button
@@ -91,6 +119,18 @@ const OrgChartPage = () => {
             </div>
           </motion.div>
         </div>
+        
+        {focusedEmployee && (
+          <div className="mb-4">
+            <Button
+              variant="outline"
+              onClick={resetFocus}
+              className="mb-4"
+            >
+              View Full Organization Chart
+            </Button>
+          </div>
+        )}
         
         <ResizablePanelGroup direction="horizontal" className="min-h-[200px] max-w-full rounded-lg border mb-6">
           <ResizablePanel defaultSize={20} minSize={15} className="p-4 bg-white">
@@ -129,14 +169,30 @@ const OrgChartPage = () => {
                 minHeight: '500px'
               }}
             >
+              {focusedEmployee && (
+                <Card className="mb-4 p-4 bg-blue-50 border-blue-200">
+                  <h2 className="text-lg font-medium text-aramco-darkblue flex items-center">
+                    <User className="w-5 h-5 mr-2 text-aramco-blue" />
+                    {focusedEmployee.name}'s Organization
+                  </h2>
+                  <p className="text-sm text-aramco-darkgray">
+                    Showing direct reports and organizational structure
+                  </p>
+                </Card>
+              )}
+              
               <div 
-                className="min-w-max py-10" 
+                className="min-w-max py-10 px-6" 
                 style={{ 
                   transform: `scale(${zoomLevel / 100})`, 
                   transformOrigin: 'top center',
                 }}
               >
-                <OrgChart data={orgChartData} />
+                <OrgChart 
+                  data={displayEmployee} 
+                  showAllReports={!focusedEmployee}
+                  focusedEmployeeId={focusedEmployeeId}
+                />
               </div>
             </motion.div>
           </ResizablePanel>
@@ -144,8 +200,9 @@ const OrgChartPage = () => {
         
         <div className="mt-4 text-center text-aramco-darkgray text-sm">
           <p>
-            This organization chart shows the hierarchical structure at Aramco.
-            Click on any employee to view their detailed profile or team badges to view team details.
+            {focusedEmployee ? 
+              "Click on any employee to view their detailed profile or team badges to view team details." :
+              "Click on any employee to view their detailed profile or team badges to view team details. Use the search to find specific employees."}
           </p>
         </div>
       </div>
