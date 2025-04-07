@@ -7,6 +7,11 @@ import { orgChartData, getAllTeams } from '../data/employees';
 import { motion } from 'framer-motion';
 import { Search, ZoomIn, ZoomOut, Network, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { 
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 
 const OrgChartPage = () => {
   const [zoomLevel, setZoomLevel] = useState(100);
@@ -32,7 +37,7 @@ const OrgChartPage = () => {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-full mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -44,7 +49,7 @@ const OrgChartPage = () => {
               Organization Chart
             </h1>
             <p className="text-aramco-darkgray mt-1">
-              Explore the organizational structure of Aramco
+              Explore the hierarchical structure of Aramco from CEO to Groups
             </p>
           </motion.div>
           
@@ -87,49 +92,59 @@ const OrgChartPage = () => {
           </motion.div>
         </div>
         
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-6"
-        >
-          <h2 className="text-xl font-display font-medium text-aramco-darkblue mb-3 flex items-center">
-            <Users className="w-5 h-5 mr-2 text-aramco-blue" />
-            Cross-Functional Teams
-          </h2>
+        <ResizablePanelGroup direction="horizontal" className="min-h-[200px] max-w-full rounded-lg border mb-6">
+          <ResizablePanel defaultSize={20} minSize={15} className="p-4 bg-white">
+            <div>
+              <h2 className="text-xl font-display font-medium text-aramco-darkblue mb-3 flex items-center">
+                <Users className="w-5 h-5 mr-2 text-aramco-blue" />
+                Teams & Units
+              </h2>
+              
+              <div className="flex flex-col gap-2 overflow-auto max-h-[70vh]">
+                {teams.map(team => (
+                  <Button
+                    key={team.id}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white justify-start w-full"
+                    onClick={() => handleTeamClick(team.id)}
+                  >
+                    {team.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </ResizablePanel>
           
-          <div className="flex flex-wrap gap-2">
-            {teams.map(team => (
-              <Button
-                key={team.id}
-                variant="outline"
-                size="sm"
-                className="bg-white"
-                onClick={() => handleTeamClick(team.id)}
+          <ResizableHandle withHandle />
+          
+          <ResizablePanel defaultSize={80} className="bg-white p-2">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-white rounded-lg overflow-auto"
+              style={{ 
+                maxHeight: 'calc(100vh - 200px)',
+                minHeight: '500px'
+              }}
+            >
+              <div 
+                className="min-w-max py-10" 
+                style={{ 
+                  transform: `scale(${zoomLevel / 100})`, 
+                  transformOrigin: 'top center',
+                }}
               >
-                {team.name}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
+                <OrgChart data={orgChartData} />
+              </div>
+            </motion.div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
         
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="glass-card p-6 rounded-2xl overflow-x-auto"
-        >
-          <div 
-            className="min-w-max" 
-            style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top left' }}
-          >
-            <OrgChart data={orgChartData} />
-          </div>
-        </motion.div>
-        
-        <div className="mt-8 text-center text-aramco-darkgray text-sm">
+        <div className="mt-4 text-center text-aramco-darkgray text-sm">
           <p>
-            This organization chart shows the leadership structure at Aramco.
+            This organization chart shows the hierarchical structure at Aramco.
             Click on any employee to view their detailed profile or team badges to view team details.
           </p>
         </div>
