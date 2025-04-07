@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import SmartProfileSummary from '../components/SmartProfileSummary';
+import ReportingLine from '../components/ReportingLine';
 import { getEmployeeById, EmployeeType } from '../data/employees';
 import { Mail, Phone, MapPin, User, Briefcase, Award, Heart, Code, Users, ChevronRight, Lightbulb, Trophy, MessageCircle, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -17,7 +17,6 @@ const EmployeeProfile = () => {
   const [activeTab, setActiveTab] = useState('about');
 
   useEffect(() => {
-    // Simulate API call
     setLoading(true);
     const timer = setTimeout(() => {
       if (id) {
@@ -79,6 +78,8 @@ const EmployeeProfile = () => {
             transition={{ duration: 0.3 }}
           >
             <SmartProfileSummary employee={employee} />
+            
+            {id && <ReportingLine employeeId={id} />}
             
             <div className="mt-6">
               {employee?.bio ? (
@@ -374,7 +375,6 @@ const EmployeeProfile = () => {
   return (
     <Layout>
       <div className="max-w-5xl mx-auto">
-        {/* Profile header with gradient background */}
         <div className="relative mb-6 rounded-2xl overflow-hidden bg-gradient-to-r from-aramco-blue to-aramco-darkblue h-40">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617103996702-96ff29b1c467?q=80&w=2832&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
           <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -389,7 +389,6 @@ const EmployeeProfile = () => {
         </div>
         
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Left column - Contact info */}
           <div className="md:w-1/3">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -471,7 +470,6 @@ const EmployeeProfile = () => {
             </motion.div>
           </div>
           
-          {/* Right column - Profile details */}
           <div className="md:w-2/3">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -479,7 +477,6 @@ const EmployeeProfile = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="glass-card rounded-2xl overflow-hidden"
             >
-              {/* Tab navigation */}
               <div className="flex flex-wrap border-b border-aramco-gray">
                 {[
                   { id: 'about', label: 'About', icon: User },
@@ -505,7 +502,6 @@ const EmployeeProfile = () => {
                 ))}
               </div>
               
-              {/* Tab content */}
               <div className="p-6">
                 {tabContent()}
               </div>
