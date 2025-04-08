@@ -38,8 +38,8 @@ export interface EmployeeType {
   }[];
   awards?: {
     title: string;
-    year: string;
     issuer: string;
+    year: string;
   }[];
   mentoring?: {
     available: boolean;
@@ -330,6 +330,172 @@ const employeesList: EmployeeType[] = [
     photoUrl: "https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
     skills: ["Machine Learning", "Data Analytics", "Python", "Statistical Modeling"],
     interests: ["AI Applications in Energy", "Predictive Maintenance", "Natural Language Processing"]
+  },
+  
+  // Adding new employees with quantum computing expertise
+  {
+    id: "e016",
+    name: "Fatima Al-Hashimi",
+    title: "Quantum Computing Scientist",
+    department: "Research & Development",
+    email: "fatima.hashimi@example.com",
+    phone: "+966-13-555-1016",
+    location: "Dhahran, Saudi Arabia",
+    photoUrl: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
+    bio: "Dr. Fatima Al-Hashimi leads Aramco's quantum computing research initiatives, focusing on applications in energy optimization and materials science.",
+    skills: ["Quantum Computing", "Quantum Algorithms", "Physics", "Machine Learning", "Materials Science"],
+    interests: ["Quantum Machine Learning", "Quantum Chemistry", "Optimization Problems"],
+    projects: [
+      {
+        name: "Quantum Computing for Reservoir Simulation",
+        description: "Developing quantum algorithms to enhance reservoir modeling accuracy and efficiency.",
+        role: "Lead Researcher",
+        period: "2022 - Present"
+      },
+      {
+        name: "Quantum-Secured Communications",
+        description: "Implementing quantum key distribution for secure communications across critical infrastructure.",
+        role: "Project Lead",
+        period: "2023 - Present"
+      }
+    ],
+    responsibilities: "Leading quantum computing research team, collaborating with academic institutions, and identifying industry applications for quantum technologies.",
+    achievements: [
+      {
+        title: "Quantum Algorithm Patent",
+        date: "June 2023",
+        description: "Patented a novel quantum algorithm for optimizing energy distribution networks."
+      }
+    ],
+    awards: [
+      {
+        title: "Emerging Technology Innovator",
+        year: "2023",
+        issuer: "World Energy Forum"
+      }
+    ],
+    mentoring: {
+      available: true,
+      topics: ["Quantum Computing", "Scientific Research", "Women in STEM"],
+      experience: "8 years mentoring graduate students and early-career scientists in quantum physics and computing."
+    },
+    teamId: "team006" // Will be added to a new team below
+  },
+  {
+    id: "e017",
+    name: "Khalid Al-Farsi",
+    title: "Quantum Software Engineer",
+    department: "Research & Development",
+    email: "khalid.farsi@example.com",
+    phone: "+966-13-555-1017",
+    location: "Dhahran, Saudi Arabia",
+    photoUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
+    bio: "Khalid specializes in developing software interfaces for quantum computing hardware, bridging the gap between theoretical algorithms and practical implementations.",
+    skills: ["Quantum Computing", "Software Engineering", "Python", "Qiskit", "Algorithm Design"],
+    interests: ["Quantum Programming", "Quantum Error Correction", "Hybrid Quantum-Classical Algorithms"],
+    projects: [
+      {
+        name: "Quantum Computing Development Framework",
+        description: "Building a custom software framework for oil & gas applications of quantum computing.",
+        role: "Lead Developer",
+        period: "2022 - Present"
+      }
+    ],
+    teamId: "team006" // Will be added to a new team below
+  },
+  
+  // Adding sustainability experts
+  {
+    id: "e018",
+    name: "Noura Al-Thani",
+    title: "Sustainability Director",
+    department: "Environmental & Sustainability",
+    email: "noura.thani@example.com",
+    phone: "+966-13-555-1018",
+    location: "Dhahran, Saudi Arabia",
+    photoUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
+    bio: "Noura leads Aramco's sustainability initiatives, focusing on reducing environmental impact while maintaining operational excellence.",
+    skills: ["Environmental Management", "Sustainability Strategy", "Carbon Capture", "Renewable Energy Integration", "ESG Reporting"],
+    interests: ["Green Hydrogen", "Circular Economy", "Net Zero Initiatives", "Sustainable Development"],
+    projects: [
+      {
+        name: "Carbon Capture Utilization & Storage",
+        description: "Leading large-scale CCUS projects to reduce carbon emissions across operations.",
+        role: "Program Director",
+        period: "2021 - Present"
+      },
+      {
+        name: "Sustainable Water Management",
+        description: "Implementing water conservation and recycling technologies across facilities.",
+        role: "Executive Sponsor",
+        period: "2020 - Present"
+      }
+    ],
+    responsibilities: "Developing and implementing company-wide sustainability strategy, managing ESG reporting, and leading cross-functional sustainability projects.",
+    achievements: [
+      {
+        title: "Sustainability Transformation",
+        date: "2022",
+        description: "Reduced operational carbon intensity by 15% through targeted sustainability initiatives."
+      }
+    ],
+    awards: [
+      {
+        title: "Environmental Leadership Award",
+        year: "2023",
+        issuer: "Middle East Energy Council"
+      }
+    ],
+    mentoring: {
+      available: true,
+      topics: ["Environmental Leadership", "Sustainable Business Practices", "ESG Strategy"],
+      experience: "12 years mentoring professionals in sustainability and environmental management."
+    },
+    teamId: "team002" // Added to existing Sustainability Task Force
+  },
+  {
+    id: "e019",
+    name: "Ahmed Al-Mansouri",
+    title: "Renewable Energy Specialist",
+    department: "Environmental & Sustainability",
+    email: "ahmed.mansouri@example.com",
+    phone: "+966-13-555-1019",
+    location: "Dhahran, Saudi Arabia",
+    photoUrl: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
+    bio: "Ahmed specializes in integrating renewable energy technologies into Aramco's operations and leads feasibility studies for large-scale renewable projects.",
+    skills: ["Renewable Energy", "Solar Power", "Wind Energy", "Energy Storage", "Sustainability"],
+    interests: ["Green Hydrogen", "Hybrid Energy Systems", "Energy Transition"],
+    projects: [
+      {
+        name: "Solar PV Implementation",
+        description: "Deploying solar photovoltaic systems across Aramco facilities.",
+        role: "Technical Lead",
+        period: "2021 - Present"
+      }
+    ],
+    teamId: "team002" // Added to existing Sustainability Task Force
+  },
+  {
+    id: "e020",
+    name: "Leila Mahmoud",
+    title: "Environmental Compliance Manager",
+    department: "Environmental & Sustainability",
+    email: "leila.mahmoud@example.com",
+    phone: "+966-13-555-1020",
+    location: "Dhahran, Saudi Arabia",
+    photoUrl: "https://images.unsplash.com/photo-1554727242-741c14fa561c?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80",
+    bio: "Leila oversees environmental compliance across Aramco operations and leads initiatives to exceed regulatory requirements through proactive environmental management.",
+    skills: ["Environmental Compliance", "Sustainability", "Waste Management", "Environmental Impact Assessment"],
+    interests: ["Circular Economy", "Biodiversity Conservation", "Environmental Policy"],
+    projects: [
+      {
+        name: "Zero Waste Initiative",
+        description: "Implementing comprehensive waste reduction and recycling programs across operations.",
+        role: "Program Manager",
+        period: "2022 - Present"
+      }
+    ],
+    teamId: "team002" // Added to existing Sustainability Task Force
   }
 ];
 
@@ -357,7 +523,7 @@ export const teamsData: TeamType[] = [
     id: "team002",
     name: "Sustainability Task Force",
     description: "Team focused on environmental initiatives and sustainable practices",
-    members: ["e001", "e003", "e013"],
+    members: ["e001", "e003", "e013", "e018", "e019", "e020"],
     projects: [
       {
         name: "Carbon Footprint Reduction",
@@ -368,6 +534,11 @@ export const teamsData: TeamType[] = [
         name: "Renewable Energy Integration",
         description: "Exploring renewable energy sources for facilities",
         status: "planned"
+      },
+      {
+        name: "ESG Excellence Program",
+        description: "Comprehensive program to enhance ESG performance and reporting",
+        status: "active"
       }
     ]
   },
@@ -414,6 +585,46 @@ export const teamsData: TeamType[] = [
         status: "active"
       }
     ]
+  },
+  
+  // Adding a new team for quantum computing
+  {
+    id: "team006",
+    name: "Quantum Computing Research",
+    description: "Specialized team exploring quantum computing applications for energy industry challenges",
+    members: ["e016", "e017"],
+    projects: [
+      {
+        name: "Quantum Algorithms for Energy",
+        description: "Researching quantum algorithms to solve complex energy optimization problems",
+        status: "active"
+      },
+      {
+        name: "Quantum Computing Infrastructure",
+        description: "Establishing quantum computing capabilities and partnerships with technology providers",
+        status: "active"
+      }
+    ]
+  },
+  
+  // Adding a team focused on cybersecurity to ensure results for that query
+  {
+    id: "team007",
+    name: "Cybersecurity Operations",
+    description: "Team responsible for protecting digital assets and implementing security measures across the company",
+    members: ["e011"],
+    projects: [
+      {
+        name: "Security Operations Center Enhancement",
+        description: "Upgrading security monitoring and response capabilities",
+        status: "active"
+      },
+      {
+        name: "Zero Trust Architecture Implementation",
+        description: "Deploying zero trust security model across corporate networks",
+        status: "active"
+      }
+    ]
   }
 ];
 
@@ -431,7 +642,7 @@ export const employeesData = employeesList.map(employee => {
     directReports: employeesList.filter(report => 
       report.department === employee.department && 
       report.id !== employee.id && 
-      report.title.includes("Director") || report.title.includes("Specialist") || report.title.includes("Analyst") || report.title.includes("Engineer")
+      (report.title.includes("Director") || report.title.includes("Specialist") || report.title.includes("Analyst") || report.title.includes("Engineer"))
     ).slice(0, 3) // Limit to 3 direct reports for the demo
   };
 });
@@ -458,7 +669,12 @@ export const orgChartData: EmployeeType = {
           ]
         },
         { ...employeesList.find(e => e.id === "e009")! }, // VP Procurement
-        { ...employeesList.find(e => e.id === "e013")! }  // Environmental Engineer
+        { ...employeesList.find(e => e.id === "e013")! },  // Environmental Engineer
+        { ...employeesList.find(e => e.id === "e016")!,    // Quantum Computing Scientist
+          directReports: [
+            { ...employeesList.find(e => e.id === "e017")! } // Quantum Software Engineer
+          ]
+        }
       ]
     },
     { 
@@ -471,6 +687,13 @@ export const orgChartData: EmployeeType = {
       ...employeesList.find(e => e.id === "e005")!, // CFO
       directReports: [
         { ...employeesList.find(e => e.id === "e012")! } // Financial Analyst
+      ]
+    },
+    { 
+      ...employeesList.find(e => e.id === "e018")!, // Sustainability Director
+      directReports: [
+        { ...employeesList.find(e => e.id === "e019")! }, // Renewable Energy Specialist
+        { ...employeesList.find(e => e.id === "e020")! }  // Environmental Compliance Manager
       ]
     }
   ]
@@ -493,24 +716,4 @@ export const getTeamMembers = (teamId: string): EmployeeType[] => {
   
   return team.members
     .map(memberId => employeesList.find(emp => emp.id === memberId))
-    .filter(member => member !== undefined) as EmployeeType[];
-};
-
-// Helper function to get an employee by ID
-export const getEmployeeById = (id: string): EmployeeType | undefined => {
-  return employeesList.find(employee => employee.id === id);
-};
-
-// Helper function to search employees
-export const searchEmployees = (query: string): EmployeeType[] => {
-  const lowercaseQuery = query.toLowerCase();
-  return employeesList.filter(employee => 
-    employee.name.toLowerCase().includes(lowercaseQuery) || 
-    employee.title.toLowerCase().includes(lowercaseQuery) || 
-    employee.department.toLowerCase().includes(lowercaseQuery) || 
-    employee.skills?.some(skill => skill.toLowerCase().includes(lowercaseQuery)) ||
-    employee.location.toLowerCase().includes(lowercaseQuery)
-  );
-};
-
-export default employeesList;
+    .filter(member => member !== undefined)
