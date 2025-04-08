@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import Layout from '../components/Layout';
-import { searchEmployees, EmployeeType } from '../data/employees';
+import { employeesData, EmployeeType } from '../data/employees';
 import { Users, Filter, Search } from 'lucide-react';
 import MentorCard from '../components/MentorCard';
 
@@ -25,16 +25,37 @@ const Mentoring = () => {
   };
   
   // Filter employees who are available for mentoring
-  const mentors = searchEmployees(searchQuery).filter(employee => 
-    employee.mentoring?.available && 
-    (selectedTopics.length === 0 || 
-      selectedTopics.some(topic => 
-        employee.mentoring?.topics?.some(t => 
-          t.toLowerCase().includes(topic.toLowerCase())
+  const mentors = employeesData
+    .filter(employee => employee.mentoring?.available === true)
+    .filter(employee => {
+      // If no search query, include all mentors
+      if (!searchQuery.trim()) {
+        return true;
+      }
+      
+      // Search in name, title, department, skills, or mentoring topics
+      const query = searchQuery.toLowerCase();
+      return (
+        employee.name.toLowerCase().includes(query) ||
+        employee.title.toLowerCase().includes(query) ||
+        employee.department.toLowerCase().includes(query) ||
+        employee.skills?.some(skill => skill.toLowerCase().includes(query)) ||
+        employee.mentoring?.topics?.some(topic => topic.toLowerCase().includes(query))
+      );
+    })
+    .filter(employee => {
+      // If no topics selected, include all mentors
+      if (selectedTopics.length === 0) {
+        return true;
+      }
+      
+      // Check if employee has any of the selected topics
+      return selectedTopics.some(selectedTopic => 
+        employee.mentoring?.topics?.some(topic => 
+          topic.toLowerCase().includes(selectedTopic.toLowerCase())
         )
-      )
-    )
-  );
+      );
+    });
 
   return (
     <Layout>
