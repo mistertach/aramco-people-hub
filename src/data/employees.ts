@@ -1,3 +1,4 @@
+
 export interface TeamType {
   id: string;
   name: string;
@@ -716,4 +717,10 @@ export const getTeamMembers = (teamId: string): EmployeeType[] => {
   
   return team.members
     .map(memberId => employeesList.find(emp => emp.id === memberId))
-    .filter(member => member !== undefined)
+    .filter(member => member !== undefined) as EmployeeType[];
+};
+
+// Helper function to get employee by ID
+export const getEmployeeById = (id: string): EmployeeType | undefined => {
+  return employeesList.find(employee => employee.id === id);
+};
