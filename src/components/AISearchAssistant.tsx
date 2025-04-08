@@ -1,8 +1,8 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { searchEmployees, EmployeeType } from '../data/employees';
-import { Sparkles, Search, Rocket, Users, Leaf } from 'lucide-react';
+import { searchEmployees, EmployeeType, getTeamById, teamsData, TeamType } from '../data/employees';
+import { Sparkles, Search, Rocket, Users, Leaf, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
@@ -12,6 +12,7 @@ const AISearchAssistant = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<EmployeeType[]>([]);
+  const [teamResults, setTeamResults] = useState<TeamType[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -19,17 +20,20 @@ const AISearchAssistant = () => {
     {
       icon: <Rocket className="w-4 h-4" />,
       text: "Who can I talk to about quantum computing?",
-      keywords: "technology quantum computing expert"
+      keywords: "technology quantum computing expert",
+      showTeams: false
     },
     {
-      icon: <Users className="w-4 h-4" />,
+      icon: <Shield className="w-4 h-4" />,
       text: "Which teams are working on cybersecurity?",
-      keywords: "cybersecurity IT security"
+      keywords: "cybersecurity IT security",
+      showTeams: true
     },
     {
       icon: <Leaf className="w-4 h-4" />,
       text: "Find experts in sustainability initiatives",
-      keywords: "sustainability environment green"
+      keywords: "sustainability environment green",
+      showTeams: false
     }
   ];
 
@@ -43,9 +47,13 @@ const AISearchAssistant = () => {
     // Search employees based on extracted keywords
     const searchResults = searchEmployees(keywords.join(' '));
     
+    // Filter teams based on keywords
+    const matchingTeams = findMatchingTeams(keywords);
+    
     return {
       searchResults,
-      interpretation: `I found ${searchResults.length} people matching "${keywords.join(', ')}"`
+      teamResults: matchingTeams,
+      interpretation: `I found ${searchResults.length} people and ${matchingTeams.length} teams matching "${keywords.join(', ')}"`
     };
   };
 
@@ -55,7 +63,8 @@ const AISearchAssistant = () => {
     
     // Skills extraction
     const skills = ['cybersecurity', 'it', 'security', 'engineering', 'finance', 
-                   'petroleum', 'data', 'analysis', 'hr', 'leadership', 'sap'];
+                   'petroleum', 'data', 'analysis', 'hr', 'leadership', 'sap',
+                   'quantum', 'computing', 'quantum computing', 'sustainability', 'environment'];
     const extractedSkills = skills.filter(skill => lowerQuery.includes(skill));
     
     // Location extraction
@@ -72,6 +81,22 @@ const AISearchAssistant = () => {
     
     return [...extractedSkills, ...extractedLocations, ...extractedDepartments, ...extractedRoles];
   };
+  
+  const findMatchingTeams = (keywords: string[]): TeamType[] => {
+    return teamsData.filter(team => {
+      const teamNameLower = team.name.toLowerCase();
+      const teamDescLower = team.description.toLowerCase();
+      
+      return keywords.some(keyword => 
+        teamNameLower.includes(keyword.toLowerCase()) || 
+        teamDescLower.includes(keyword.toLowerCase()) ||
+        (team.projects && team.projects.some(project => 
+          project.name.toLowerCase().includes(keyword.toLowerCase()) ||
+          project.description.toLowerCase().includes(keyword.toLowerCase())
+        ))
+      );
+    });
+  };
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -81,8 +106,9 @@ const AISearchAssistant = () => {
     // Simulate AI processing time
     setTimeout(() => {
       try {
-        const { searchResults, interpretation } = processNaturalLanguageQuery(query);
+        const { searchResults, teamResults, interpretation } = processNaturalLanguageQuery(query);
         setResults(searchResults);
+        setTeamResults(teamResults);
         setShowResults(true);
         
         toast({
@@ -113,12 +139,25 @@ const AISearchAssistant = () => {
     setTimeout(() => {
       try {
         const searchResults = searchEmployees(questionData.keywords);
+        
+        // Find matching teams if needed
+        const matchingTeams = questionData.showTeams 
+          ? findMatchingTeams(questionData.keywords.split(' '))
+          : [];
+        
         setResults(searchResults);
+        setTeamResults(matchingTeams);
         setShowResults(true);
+        
+        let resultDescription = `I found ${searchResults.length} people`;
+        if (matchingTeams.length > 0) {
+          resultDescription += ` and ${matchingTeams.length} teams`;
+        }
+        resultDescription += " related to this topic";
         
         toast({
           title: "AI Search Results",
-          description: `I found ${searchResults.length} people related to this topic`,
+          description: resultDescription,
           duration: 3000,
         });
       } catch (error) {
@@ -137,6 +176,10 @@ const AISearchAssistant = () => {
 
   const handleEmployeeClick = (id: string) => {
     navigate(`/employee/${id}`);
+  };
+  
+  const handleTeamClick = (id: string) => {
+    navigate(`/team/${id}`);
   };
 
   return (
@@ -181,45 +224,81 @@ const AISearchAssistant = () => {
         )}
       </Button>
       
-      {showResults && results.length > 0 && (
+      {showResults && (results.length > 0 || teamResults.length > 0) && (
         <div className="mt-6 space-y-4">
           <h3 className="text-aramco-darkblue font-medium">
-            Found {results.length} {results.length === 1 ? 'match' : 'matches'}
+            Found {results.length + teamResults.length} {results.length + teamResults.length === 1 ? 'match' : 'matches'}
           </h3>
           
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {results.map(employee => (
-              <div
-                key={employee.id}
-                onClick={() => handleEmployeeClick(employee.id)}
-                className="flex items-center p-3 rounded-lg bg-white hover:bg-aramco-blue hover:bg-opacity-5 cursor-pointer transition-colors"
-              >
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-aramco-blue bg-opacity-10 mr-3 flex-shrink-0">
-                  {employee.photoUrl ? (
-                    <img 
-                      src={employee.photoUrl} 
-                      alt={employee.name} 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-aramco-blue text-lg font-semibold">
-                      {employee.name.charAt(0)}
+          {teamResults.length > 0 && (
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-aramco-darkblue mb-2 flex items-center">
+                <Users className="w-4 h-4 mr-1" />
+                Teams ({teamResults.length})
+              </h4>
+              <div className="space-y-2">
+                {teamResults.map(team => (
+                  <div
+                    key={team.id}
+                    onClick={() => handleTeamClick(team.id)}
+                    className="flex items-center p-3 rounded-lg bg-white hover:bg-aramco-blue hover:bg-opacity-5 cursor-pointer transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-aramco-blue bg-opacity-10 mr-3 flex-shrink-0 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-aramco-blue" />
                     </div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-aramco-darkblue">{employee.name}</h4>
-                  <p className="text-sm text-aramco-darkgray">{employee.title}</p>
-                </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-aramco-darkblue">{team.name}</h4>
+                      <p className="text-sm text-aramco-darkgray">{team.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+          
+          {results.length > 0 && (
+            <>
+              {teamResults.length > 0 && (
+                <h4 className="text-sm font-medium text-aramco-darkblue mb-2 flex items-center">
+                  <Users className="w-4 h-4 mr-1" />
+                  People ({results.length})
+                </h4>
+              )}
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {results.map(employee => (
+                  <div
+                    key={employee.id}
+                    onClick={() => handleEmployeeClick(employee.id)}
+                    className="flex items-center p-3 rounded-lg bg-white hover:bg-aramco-blue hover:bg-opacity-5 cursor-pointer transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-aramco-blue bg-opacity-10 mr-3 flex-shrink-0">
+                      {employee.photoUrl ? (
+                        <img 
+                          src={employee.photoUrl} 
+                          alt={employee.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-aramco-blue text-lg font-semibold">
+                          {employee.name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-aramco-darkblue">{employee.name}</h4>
+                      <p className="text-sm text-aramco-darkgray">{employee.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
       
-      {showResults && results.length === 0 && (
+      {showResults && results.length === 0 && teamResults.length === 0 && (
         <div className="mt-6 p-4 text-center bg-aramco-gray bg-opacity-10 rounded-lg">
-          <p className="text-aramco-darkgray">No matching employees found. Try a different query.</p>
+          <p className="text-aramco-darkgray">No matching employees or teams found. Try a different query.</p>
         </div>
       )}
     </div>
