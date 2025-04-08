@@ -1,4 +1,3 @@
-
 export interface TeamType {
   id: string;
   name: string;
@@ -723,4 +722,56 @@ export const getTeamMembers = (teamId: string): EmployeeType[] => {
 // Helper function to get employee by ID
 export const getEmployeeById = (id: string): EmployeeType | undefined => {
   return employeesList.find(employee => employee.id === id);
+};
+
+// Adding the missing searchEmployees function
+export const searchEmployees = (query: string): EmployeeType[] => {
+  if (!query || query.trim() === '') {
+    return [];
+  }
+
+  const normalizedQuery = query.toLowerCase().trim();
+  
+  return employeesList.filter(employee => {
+    // Search by name
+    if (employee.name.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search by title
+    if (employee.title.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search by department
+    if (employee.department.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search by location
+    if (employee.location.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    // Search by skills
+    if (employee.skills && employee.skills.some(skill => 
+      skill.toLowerCase().includes(normalizedQuery)
+    )) {
+      return true;
+    }
+    
+    // Search by interests
+    if (employee.interests && employee.interests.some(interest => 
+      interest.toLowerCase().includes(normalizedQuery)
+    )) {
+      return true;
+    }
+    
+    // Search by bio
+    if (employee.bio && employee.bio.toLowerCase().includes(normalizedQuery)) {
+      return true;
+    }
+    
+    return false;
+  });
 };
