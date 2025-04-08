@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import AISearchAssistant from '../components/AISearchAssistant';
 import EmployeeCard from '../components/EmployeeCard';
-import { searchEmployees, EmployeeType } from '../data/employees';
+import { searchEmployees, employeesData, EmployeeType } from '../data/employees';
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
 
@@ -20,7 +20,10 @@ const SearchResults = () => {
     // Simulate API call with a slight delay
     setLoading(true);
     const timer = setTimeout(() => {
-      const searchResults = searchEmployees(query);
+      // If no query is provided, show all employees
+      const searchResults = query.trim() === '' 
+        ? employeesData 
+        : searchEmployees(query);
       setResults(searchResults);
       setLoading(false);
     }, 500);
@@ -33,16 +36,20 @@ const SearchResults = () => {
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-display font-medium text-aramco-darkblue mb-4">
-            Search Results
+            {query ? 'Search Results' : 'All Employees'}
           </h1>
           <SearchBar className="mb-4" />
           
           <div className="bg-aramco-blue bg-opacity-5 rounded-lg px-4 py-3 text-aramco-darkblue flex items-center">
             <Users className="w-5 h-5 mr-2" />
             {loading ? (
-              <span>Searching for '{query}'...</span>
+              <span>{query ? `Searching for '${query}'...` : 'Loading all employees...'}</span>
             ) : (
-              <span>Found {results.length} {results.length === 1 ? 'employee' : 'employees'} for '{query}'</span>
+              <span>
+                {query
+                  ? `Found ${results.length} ${results.length === 1 ? 'employee' : 'employees'} for '${query}'`
+                  : `Showing all ${results.length} employees`}
+              </span>
             )}
           </div>
         </div>
